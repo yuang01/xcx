@@ -1,0 +1,236 @@
+<style lang="scss" scoped>
+  $color: #ed4040; // 定义下划线颜色
+  .tab {
+    display: flex;
+    flex-direction: column;
+    .tab-nav {
+      height: 80rpx;
+      background: #fff;
+      border-bottom: 0.5rpx dotted #ddd;
+      display: flex;
+      line-height: 79rpx;
+      position: relative;
+      .tab-line {
+        position: absolute;
+        left: 0;
+        bottom: -1rpx;
+        height: 4rpx;
+        background: $color;
+        transition: all 0.3s;
+      }
+    }
+    .tab-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+  .scroll {
+    height: 100%;
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 20rpx;
+      padding: 20rpx 0;
+      border-bottom: 1rpx solid #ccc;
+      .news-introduce {
+        width: 66%;
+        .news-title {
+          min-height: 100rpx;
+        }
+        .news-source {
+          display: flex;
+          font-size: 32rpx;
+          color: rgb(75, 67, 67);
+          margin-top: 20rpx;
+          .news-category,
+          .news-time,
+          .news-src {
+            margin-right: 10rpx;
+          }
+          .news-category {
+            border: 1px solid $color;
+            color: $color;
+            padding: 5rpx;
+            font-size: 22rpx;
+            box-sizing: border-box;
+          }
+        }
+      }
+      .news-img {
+        width: 33%;
+        height: 170rpx;
+        .image {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+<view class="page">
+  <scroll-view scroll-x="true" style="width: 100%;white-space:nowrap;">
+    <!-- tab -->
+    <view class="tab">
+      <view class="tab-nav" style='font-size:12px'>
+        <repeat for="{{tabnav.tabitem}}" key="index" index="index" item="item">
+          <view @tap="setTab({{item.id}}, {{item.text}})" style="min-width:20%;max-width:20%;text-align:center;height: 80rpx;">{{item.text}}</view>
+        </repeat>
+        <view>
+          <view class="tab-line" style="width:{{20}}%;transform:translateX({{100*showtab}}%);"></view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <swiper current="{{showtab}}" autopaly="false" @change="switchTab" style="height:{{winHeight}}rpx;">
+    <!-- 头条-->
+    <repeat for="{{list}}" key="index" index="index" item="item">
+      <swiper-item>
+        <scroll-view scroll-y="true" class="scroll" bindscrolltolower="loadMore">
+          <repeat for="{{item}}" key="chdindex" index="chdindex" item="chditem">
+            <view class="list">
+              <view class="news-introduce" style="width:{{chditem.pic === '' ? '100%' : '66%'}};">
+                <view class="news-title">{{chditem.title}}</view>
+                <view class="news-source">
+                  <view class="news-category">{{chditem.category}}</view>
+                  <view class="news-src">{{chditem.src}}</view>
+                </view>
+              </view>
+              <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" src="{{chditem.pic}}"></image></view>
+            </view>
+          </repeat>
+        </scroll-view>
+      </swiper-item>
+    </repeat>
+  </swiper>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页'
+    }
+    components = {}
+    data = {
+      winHeight: '', // 窗口高度
+      showtab: 0, // 顶部选项卡索引
+      list: [[], [], [], [], [], [], [], [], [], [], [], [], [], []], // 数据容器
+      start: 0, // 起始位置
+      channel: '头条', // 新闻分类
+      tabnav: {
+        tabnum: 14,
+        tabitem: [
+          {
+            'id': 0,
+            'text': '头条'
+          },
+          {
+            'id': 1,
+            'text': '新闻'
+          },
+          {
+            'id': 2,
+            'text': '财经'
+          },
+          {
+            'id': 3,
+            'text': '体育'
+          },
+          {
+            'id': 4,
+            'text': '娱乐'
+          },
+          {
+            'id': 5,
+            'text': '军事'
+          },
+          {
+            'id': 6,
+            'text': '教育'
+          },
+          {
+            'id': 7,
+            'text': '科技'
+          },
+          {
+            'id': 8,
+            'text': 'NBA'
+          },
+          {
+            'id': 9,
+            'text': '股票'
+          },
+          {
+            'id': 10,
+            'text': '星座'
+          },
+          {
+            'id': 11,
+            'text': '女性'
+          },
+          {
+            'id': 12,
+            'text': '健康'
+          },
+          {
+            'id': 13,
+            'text': '育儿'
+          }
+        ]
+      },
+      productList: []
+    }
+    computed = {}
+    methods = {
+      // 触底加载更多
+      loadMore() {
+        console.log('haha')
+      },
+      // 点击头部tab
+      setTab(id, text) {
+        this.showtab = id
+        this.channel = text
+        this.url()
+      },
+      // 滑动内容部分
+      switchTab(e) {
+        this.showtab = e.detail.current
+        this.channel = this.tabnav.tabitem[this.showtab].text
+        this.url()
+      }
+    }
+    async url() {
+      let self = this
+      let res = await wepy.request({
+        url: 'http://api.jisuapi.com/news/get?appkey=97402b05fa4ab929',
+        data: {
+          channel: self.channel,
+          num: 10,
+          start: 0
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      })
+      this.list[this.showtab] = res.data.result.list
+      this.$apply()
+    }
+    onLoad() {
+      let self = this
+      // 获取设备信息
+      let res = wepy.getSystemInfoSync()
+      // swiper高度自适应
+      let clientHeight = res.windowHeight
+      let clientWidth = res.windowWidth
+      let rpxR = 750 / clientWidth
+      let calc = clientHeight * rpxR - 180
+      self.winHeight = calc
+      console.log('self.winHeight')
+      this.url()
+    }
+  }
+</script>
