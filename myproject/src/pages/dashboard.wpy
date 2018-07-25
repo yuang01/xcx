@@ -71,6 +71,35 @@
       font-size: 12px;
     }
   }
+  .bg-text {
+    position: relative;
+    font-size: 25px;
+    color: rgb(110, 106, 106);
+    font-weight: 900;
+    opacity: .3;
+    text-align: center;
+    transform: rotate(-10deg) translateY(-50%);
+    margin-top: 50%;
+    z-index: -1;
+    .light {
+      position: absolute;
+      width: 10px;
+      height: 100px;
+      background: #fff;
+      opacity: .5;
+      top: 0;
+      left: 0;
+      animation: move .5s infinite;
+    }
+    @keyframes move {
+      0% {
+        left: 0;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+  }
 </style>
 
 <template>
@@ -88,8 +117,8 @@
       </view>
     </view>
   </scroll-view>
+  <!-- 底下内容 -->
   <swiper wx:if="{{isswiper}}" duration="200" current="{{showtab}}" autopaly="false" @change="switchTab" style="height:{{winHeight}}rpx;">
-    <!-- 头条-->
     <repeat for="{{list}}" key="index" index="index" item="item">
       <swiper-item>
         <scroll-view scroll-y="true" class="scroll" bindscrolltolower="loadMore">
@@ -105,11 +134,14 @@
               <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" src="{{chditem.pic}}"></image></view>
             </view>
           </repeat>
+          <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
           <view class="more" wx:if="{{ismore}}">加载中...</view>
         </scroll-view>
       </swiper-item>
     </repeat>
   </swiper>
+  <!-- 背景文字，加载的时候出现的文字 -->
+  <view class="bg-text" wx:if="{{!isswiper}}"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
   </view>
 </template>
 
