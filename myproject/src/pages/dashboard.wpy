@@ -100,6 +100,31 @@
       }
     }
   }
+  .refresh {
+    position: fixed;
+    right: 30rpx;
+    bottom: 30rpx;
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 50%;
+    z-index: 3;
+    image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+  .rotate {
+    animation:  rotate 1s infinite; 
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 </style>
 
 <template>
@@ -134,14 +159,17 @@
               <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" src="{{chditem.pic}}"></image></view>
             </view>
           </repeat>
-          <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
           <view class="more" wx:if="{{ismore}}">加载中...</view>
+          <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
         </scroll-view>
       </swiper-item>
     </repeat>
   </swiper>
   <!-- 背景文字，加载的时候出现的文字 -->
   <view class="bg-text" wx:if="{{!isswiper}}"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
+  <view @tap="refresh" class="{{isrefresh === true ? 'rotate': ''}} refresh">
+    <image src="..//images/refresh.png" mode="aspectFit"></image>
+  </view>
   </view>
 </template>
 
@@ -157,6 +185,7 @@
       tabWidth: 0, // 记录tab的宽度
       isswiper: true, // 让swiper里面的内容淡入淡出效果
       ismore: false, // 显示加载更多
+      isrefresh: true,
       winHeight: '', // 窗口高度
       showtab: 0, // 顶部选项卡索引
       page: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 请求的起始位置，类似于翻页
@@ -171,10 +200,16 @@
     }
     computed = {}
     methods = {
+      // 刷新按钮事件
+      refresh() {
+        this.page[this.showtab] = 0
+        this.url(true)
+      },
       // 触底加载更多
       loadMore() {
         this.ismore = true
         this.page[this.showtab] += 10
+        this.$apply()
         this.url()
       },
       // 点击头部tab
@@ -213,7 +248,8 @@
       }
     }
     // 请求api
-    async url() {
+    async url(refresh) {
+      this.isrefresh = true // 加载数据的时候，让刷新按钮旋转
       let self = this
       let start = this.page[this.showtab]
       let res = await wepy.request({
@@ -227,7 +263,12 @@
           'content-type': 'application/json' // 默认值
         }
       })
-      this.list[this.showtab] = this.list[this.showtab].concat(res.data.result.list)
+      if (refresh) {
+        this.list[this.showtab] = res.data.result.list
+      } else {
+        this.list[this.showtab] = this.list[this.showtab].concat(res.data.result.list)
+      }
+      this.isrefresh = false // 数据加载完成，取消按钮加载
       this.ismore = false
       this.$apply()
     }
