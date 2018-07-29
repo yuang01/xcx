@@ -1,0 +1,34 @@
+<style lang="scss" scoped>
+@import "../wxParse/wxParse.wxss";
+</style>
+
+<import src="../../../wxParse/wxParse.wxml" />
+<template>
+<!-- 使用wxPrase来解析html文本 -->
+<view class="page">
+  <!--  注意，只有在text标签中\n才会生效 -->
+  <text>this is a  new detail page...\n{{content.nodes[0].text}}</text>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  let WxParse = require('../wxParse/wxParse')
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '新闻详情'
+    }
+    components = {}
+    data = {
+      content: {}
+    }
+    onLoad(options) {
+      console.log(options.title)
+      let that = this
+      this.content = WxParse.wxParse('content', 'html', options.content, that, 5)
+      console.log(this.content.nodes[0].text)
+      // this.content = this.content.nodes[0].text.replace(/。/g, '。\n')
+      this.$apply()
+    }
+  }
+</script>

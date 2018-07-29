@@ -150,7 +150,7 @@
       <swiper-item>
         <scroll-view scroll-y="true" class="scroll" bindscrolltolower="loadMore">
           <repeat for="{{item}}" key="chdindex" index="chdindex" item="chditem">
-            <view class="list">
+            <view class="list" @tap="toDetail( {{chditem}} )">
               <view class="news-introduce" style="width:{{chditem.pic === '' ? '100%' : '66%'}};">
                 <view class="news-title">{{chditem.title}}</view>
                 <view class="news-source">
@@ -172,7 +172,7 @@
   <view @tap="refresh" class="{{isrefresh === true ? 'rotate': ''}} refresh">
     <image src="..//images/refresh.png" mode="aspectFit"></image>
   </view>
-  </view>
+</view>
 </template>
 
 <script>
@@ -202,6 +202,12 @@
     }
     computed = {}
     methods = {
+      // 跳转到新闻详情页面
+      toDetail(chditem) {
+        wepy.navigateTo({
+          url: `newDetail?channel=${chditem.channel}&content=${chditem.content}&pic=${chditem.pic}&time=${chditem.item}&title=${chditem.title}`
+        })
+      },
       // 刷新按钮事件
       refresh() {
         this.page[this.showtab] = 0
