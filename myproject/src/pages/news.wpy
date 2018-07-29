@@ -204,7 +204,7 @@
     methods = {
       // 跳转到新闻详情页面
       toDetail(chditem) {
-        let content = chditem.content.replace(/<[^>]+>/g, '')
+        let content = chditem.content.replace(/&nbsp;/ig, '').replace(/<[^>]+>/g, '')
         wepy.navigateTo({
           url: `newDetail?category=${chditem.category}&src=${chditem.src}&content=${content}&pic=${chditem.pic}&time=${chditem.time}&title=${chditem.title}`
         })

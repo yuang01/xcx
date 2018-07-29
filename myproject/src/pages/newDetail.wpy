@@ -39,7 +39,7 @@
   <view class="title">{{title}}</view>
   <view class="src">{{src}}  <view class="category">{{category}}</view></view>
   <view class="time">{{time}}</view>
-  <view class="img"><image src="{{pic}}" style="width: 100%;"></image></view>
+  <view class="img" wx:if="{{pic !== ''}}"><image src="{{pic}}" mode="aspectFit" style="width: 100%;"></image></view>
   <rich-text nodes="{{content}}" class="content"></rich-text>
 </view>
 </template>
