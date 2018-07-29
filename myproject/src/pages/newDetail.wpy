@@ -1,32 +1,68 @@
 <style lang="scss" scoped>
-// @import "../wxParse/wxParse.wxss";
+.page {
+  padding: 30rpx;
+  .title {
+    font-size: 18px;
+    font-weight: 800;
+  }
+  @mixin set-margin-value($side, $value) {
+    margin-#{$side}: $value;
+  }
+  .src {
+    @include set-margin-value(top, 30rpx);
+    @include set-margin-value(bottom, 10rpx);
+    font-size: 12px;
+    display: flex;
+    .category {
+      margin-left: 5rpx;
+      padding: 0 5rpx;
+      background: #ed4040;
+      color: #fff;
+      border-radius: 3rpx;
+    }
+  }
+  .time {
+    @include set-margin-value(bottom, 30rpx);
+    font-size: 10px;
+  }
+  .img {
+    margin-bottom: 30rpx;
+  }
+}
 </style>
 
 <template>
-<!-- 使用wxPrase来解析html文本 -->
 <view class="page">
-  <!--  注意，只有在text标签中\n才会生效 <repeat for="{{content.nodes[0].textArray}}" key="index" index="index" item="item">{{item.text}}</repeat>-->
+  <view class="title">{{title}}</view>
+  <view class="src">{{src}}  <view class="category">{{category}}</view></view>
+  <view class="time">{{time}}</view>
+  <view class="img"><image src="{{pic}}" style="width: 100%;"></image></view>
   <rich-text nodes="{{content}}"></rich-text>
 </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  // let WxParse = require('../wxParse/wxParse')
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '新闻详情'
     }
     components = {}
     data = {
-      content: ''
+      title: '',
+      content: '',
+      src: '',
+      category: '',
+      time: '',
+      pic: ''
     }
     onLoad(options) {
-      // let that = this
-      // this.content = WxParse.wxParse('content', 'html', options.content, that, 5)
-      // console.log(this.wxParseData)
-      // this.content = this.content.nodes[0].text.replace(/。/g, '。\n')
+      this.title = options.title
       this.content = options.content.replace(/。/g, '。<br><br>')
+      this.src = options.src
+      this.category = options.category
+      this.time = options.time
+      this.pic = options.pic
       this.$apply()
     }
   }
