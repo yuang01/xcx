@@ -28,6 +28,9 @@
   .img {
     margin-bottom: 30rpx;
   }
+  .content {
+    font-size: 14px;
+  }
 }
 </style>
 
@@ -37,7 +40,7 @@
   <view class="src">{{src}}  <view class="category">{{category}}</view></view>
   <view class="time">{{time}}</view>
   <view class="img"><image src="{{pic}}" style="width: 100%;"></image></view>
-  <rich-text nodes="{{content}}"></rich-text>
+  <rich-text nodes="{{content}}" class="content"></rich-text>
 </view>
 </template>
 
