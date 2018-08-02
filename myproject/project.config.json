@@ -11,5 +11,31 @@
 	"appid": "wx92c2f1a0458e427e",
 	"projectname": "myproject",
 	"miniprogramRoot": "./dist",
-	"condition": {}
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": -1,
+					"name": "段子页面",
+					"pathName": "pages/paragraph"
+				}
+			]
+		}
+	}
 }

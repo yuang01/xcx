@@ -66,10 +66,10 @@
         }
       }
     }
-    .more {
-      text-align: center;
-      font-size: 12px;
-    }
+  }
+  .more {
+    text-align: center;
+    font-size: 12px;
   }
   .bg-text {
     position: relative;
@@ -161,9 +161,9 @@
               <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" src="{{chditem.pic}}"></image></view>
             </view>
           </repeat>
-          <view class="more" wx:if="{{ismore}}">加载中...</view>
           <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
         </scroll-view>
+        <view class="more">加载中...</view>
       </swiper-item>
     </repeat>
   </swiper>
@@ -186,7 +186,6 @@
       scrollLeft: 0, // 显示tab向左边滚动的距离
       tabWidth: 0, // 记录tab的宽度
       isswiper: true, // 让swiper里面的内容淡入淡出效果
-      ismore: false, // 显示加载更多
       isrefresh: true,
       winHeight: '', // 窗口高度
       showtab: 0, // 顶部选项卡索引
@@ -217,7 +216,6 @@
       },
       // 触底加载更多
       loadMore() {
-        this.ismore = true
         this.page[this.showtab] += 10
         this.$apply()
         this.url()
@@ -279,11 +277,9 @@
         this.list[this.showtab] = this.list[this.showtab].concat(res.data.result.list)
       }
       this.isrefresh = false // 数据加载完成，取消按钮加载
-      this.ismore = false
       this.$apply()
     }
     onLoad() {
-      let self = this
       // 获取设备信息
       let res = wepy.getSystemInfoSync()
       // swiper高度自适应
@@ -291,8 +287,9 @@
       let clientWidth = res.windowWidth
       let rpxR = 750 / clientWidth
       let calc = clientHeight * rpxR - 180
-      self.winHeight = calc
-      self.tabWidth = clientWidth / 5
+      this.winHeight = calc
+      this.tabWidth = clientWidth / 5
+      this.$apply()
       this.url()
     }
   }

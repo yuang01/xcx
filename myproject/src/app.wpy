@@ -23,6 +23,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/news',
+      'pages/paragraph',
       'pages/index',
       'pages/newDetail'
     ],
@@ -43,10 +44,10 @@ export default class extends wepy.app {
         // iconPath: './images/tabbars/icon-map.png',
         text: '首页'
       }, {
-        pagePath: 'pages/index',
+        pagePath: 'pages/paragraph',
         // selectedIconPath: './images/tabbars/icon-book-active.png',
         // iconPath: './images/tabbars/icon-book.png',
-        text: '分类'
+        text: '段子'
       }]
     }
   }

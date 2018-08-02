@@ -1,0 +1,144 @@
+<style lang="scss" scoped>
+.page {
+  padding: 0 20rpx;
+  .list {
+    padding: 20rpx 0;
+    border-bottom: 1rpx solid #ccc;
+    font-size: 1rem;
+    image,
+    video {
+      margin: 20rpx 0 0 0;
+    }
+    .info {
+      display: flex;
+      font-size: .8rem;
+      margin-top: 20rpx;
+      .comment {
+        margin-right: 10rpx;
+      }
+    }
+    .video {
+      position: relative;
+      overflow: hidden;
+      .mask {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: #ccc;
+        opacity: .2;
+      }
+      .play {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        display: block;
+        transform: translate(-30%, -50%);
+        z-index: 2;
+        .play-button {
+          width: 0;
+          height: 0;
+          border-top: 30rpx solid transparent;
+          border-left: 50rpx solid #fff;
+          border-bottom: 30rpx solid transparent;
+        }
+        .videotime {
+          color: #fff;
+          transform: translateX(-30%); 
+        }
+      }
+    }
+  }
+}
+</style>
+
+<template>
+<view class="page">
+  <repeat for="{{list}}" key="index" index="index" item="item">
+    <view class="list">
+      <text>{{item.text}}</text>
+      <!-- 当类型是图片的时候 -->
+      <image wx:if="{{item.type === '10'}}" src="{{item.cdn_img}}"  mode="aspectFit" @error="err({{index}})"></image>
+      <!-- 当类型是视频的时候，一开始显示视频的图片，当点击播放按钮的时候才显示video -->
+      <view class="video">
+        <view class="mask" wx:if="{{item.type === '41' && index !== videoIndex}}"></view>
+        <view class="play" wx:if="{{item.type === '41' && index !== videoIndex}}">
+          <view class="play-button" @tap="playVideo({{index}})"></view>
+          <view class="videotime">{{item.videotime}}</view>
+        </view>
+        <image wx:if="{{item.type === '41' && index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" @error="err({{index}})"></image>
+        <video wx:if="{{index === videoIndex}}" src="{{item.videouri}}" id="video-{{index}}" autoplay="true" show-center-play-btn="false" @error="err({{index}})"></video>
+      </view>
+      <!-- 底部评论数和发布时间 -->
+      <view class="info"><view class="comment">{{item.comment}}评论</view><view class="passtime">{{item.passtime}}</view></view>
+    </view>
+  </repeat>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '段子'
+    }
+    components = {}
+    data = {
+      list: [],
+      videoIndex: -1
+    }
+    methods = {
+      // 当图片和视频的链接为404的时候，将此项删除
+      err(index) {
+        this.list.splice(index, 1)
+      },
+      // 当点击播放按钮，将图片变成视频,将其他视频隐藏（这样做的目的是让本页面始终只有一个视频处于播放状态）
+      playVideo(index) {
+        // 当第一次点击视频的时候，将index绑定到videoIndex上面
+        // 然后通过wepy.createVideoContext(`video-${index}`)获取当前点击的视频，然后进行播放
+        if (this.videoIndex === -1) {
+          this.videoIndex = index
+          // 如果视频未设置自动播放，就执行以下注释代码
+          // let videoContext = wepy.createVideoContext(`video-${index}`)
+          // videoContext.play()
+        } else { // 否则，则表示不是第一次点击，则关闭上一次点击的视频，并将当前点击的视频打开
+          console.log(this.videoIndex)
+          let self = this
+          let videoContextPrev = wepy.createVideoContext(`video-${self.videoIndex}`)
+          videoContextPrev.pause()
+          this.videoIndex = index
+          // let videoContext = wepy.createVideoContext(`video-${index}`)
+          // videoContext.play()
+        }
+      }
+    }
+    // 请求api
+    async url() {
+      let res = await wepy.request({
+        url: 'https://www.apiopen.top/satinApi',
+        data: {
+          type: 1,
+          page: 1
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      })
+      // 计算视频的时间,将秒转换成分钟
+      res.data.data.map(item => {
+        let min = Math.floor(item.videotime / 60)
+        const minVal = min >= 10 ? min : `0${min}`
+        let second = item.videotime % 60
+        const secondVal = second >= 10 ? second : `0${second}`
+        item.videotime = `${minVal}:${secondVal}`
+        return item
+      })
+      this.list = res.data.data
+      console.log(this.list)
+      this.$apply()
+    }
+    onLoad() {
+      this.url()
+    }
+  }
+</script>
