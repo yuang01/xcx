@@ -148,7 +148,7 @@
   <swiper wx:if="{{isswiper}}" duration="200" current="{{showtab}}" autopaly="false" @change="switchTab" style="height:{{winHeight}}rpx;">
     <repeat for="{{list}}" key="index" index="index" item="item">
       <swiper-item>
-        <scroll-view scroll-y="true" class="scroll" bindscrolltolower="loadMore">
+        <scroll-view scroll-y="true" scroll-top="{{scrollTop}}" class="scroll" bindscrolltolower="loadMore">
           <repeat for="{{item}}" key="chdindex" index="chdindex" item="chditem">
             <view class="list" @tap="toDetail( {{chditem}} )">
               <view class="news-introduce" style="width:{{chditem.pic === '' ? '100%' : '66%'}};">
@@ -187,6 +187,7 @@
       tabWidth: 0, // 记录tab的宽度
       isswiper: true, // 让swiper里面的内容淡入淡出效果
       isrefresh: true,
+      scrollTop: 0,
       winHeight: '', // 窗口高度
       showtab: 0, // 顶部选项卡索引
       page: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 请求的起始位置，类似于翻页
@@ -207,12 +208,13 @@
         wepy.navigateTo({
           url: `newDetail?category=${chditem.category}&src=${chditem.src}&content=${content}&pic=${chditem.pic}&time=${chditem.time}&title=${chditem.title}`
         })
-        console.log()
       },
       // 刷新按钮事件
-      refresh() {
+      async refresh() {
         this.page[this.showtab] = 0
-        this.url(true)
+        await this.url(true).then(res => {
+          this.scrollTop = 0
+        })
       },
       // 触底加载更多
       loadMore() {

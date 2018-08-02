@@ -31,7 +31,9 @@ export default class extends wepy.app {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#ed4040',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'light'
+      navigationBarTextStyle: 'light',
+      enablePullDownRefresh: true,
+      backgroundColor: '#ed4040'
     },
     tabBar: {
       color: '#707070',
@@ -47,7 +49,7 @@ export default class extends wepy.app {
         pagePath: 'pages/paragraph',
         // selectedIconPath: './images/tabbars/icon-book-active.png',
         // iconPath: './images/tabbars/icon-book.png',
-        text: '段子'
+        text: '笑一笑'
       }]
     }
   }

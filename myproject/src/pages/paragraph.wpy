@@ -5,8 +5,12 @@
     padding: 20rpx 0;
     border-bottom: 1rpx solid #ccc;
     font-size: 1rem;
+    text {
+      font-size: 35rpx;
+    }
     image,
     video {
+      width: 100%;
       margin: 20rpx 0 0 0;
     }
     .info {
@@ -20,6 +24,7 @@
     .video {
       position: relative;
       overflow: hidden;
+      margin: 20rpx 0;
       .mask {
         position: absolute;
         z-index: 1;
@@ -49,6 +54,39 @@
       }
     }
   }
+  .more {
+    text-align: center;
+    font-size: 12px;
+    padding: 10rpx 0 ;
+  }
+  // 刷新按钮样式
+  .refresh {
+    position: fixed;
+    right: 30rpx;
+    bottom: 50rpx;
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+    background: #fff;
+    z-index: 3;
+    overflow: hidden;
+    box-shadow: 1px 1px 2px 2px #ccc;
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .rotate {
+    animation:  rotate 1s infinite; 
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 }
 </style>
 
@@ -73,6 +111,11 @@
       <view class="info"><view class="comment">{{item.comment}}评论</view><view class="passtime">{{item.passtime}}</view></view>
     </view>
   </repeat>
+  <view class="more" wx:if="{{ismore}}">加载中...</view>
+  <!-- 刷新按钮 -->
+  <view @tap="refresh" class="{{isrefresh === true ? 'rotate': ''}} refresh">
+    <image src="..//images/refresh.png" mode="aspectFit"></image>
+  </view>
 </view>
 </template>
 
@@ -80,14 +123,45 @@
   import wepy from 'wepy'
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '段子'
+      navigationBarTitleText: '笑一笑'
     }
     components = {}
     data = {
       list: [],
-      videoIndex: -1
+      page: 1,
+      videoIndex: -1,
+      ismore: false
+    }
+    // 上拉加载更多
+    onReachBottom() {
+      this.page += 1
+      this.url()
+    }
+    // 下拉刷新操作
+    async onPullDownRefresh() {
+      await this.url(true).then(() => {
+        wepy.pageScrollTo({
+          scrollTop: 0,
+          duration: 0
+        })
+        wepy.stopPullDownRefresh() // 关闭下拉刷新
+      })
     }
     methods = {
+      // 刷新操作
+      async refresh() {
+        wepy.showLoading({
+          title: '加载中'
+        })
+        this.page = 0
+        await this.url(true).then(res => {
+          wepy.hideLoading()
+          wepy.pageScrollTo({
+            scrollTop: 0,
+            duration: 0
+          })
+        })
+      },
       // 当图片和视频的链接为404的时候，将此项删除
       err(index) {
         this.list.splice(index, 1)
@@ -102,7 +176,6 @@
           // let videoContext = wepy.createVideoContext(`video-${index}`)
           // videoContext.play()
         } else { // 否则，则表示不是第一次点击，则关闭上一次点击的视频，并将当前点击的视频打开
-          console.log(this.videoIndex)
           let self = this
           let videoContextPrev = wepy.createVideoContext(`video-${self.videoIndex}`)
           videoContextPrev.pause()
@@ -113,12 +186,14 @@
       }
     }
     // 请求api
-    async url() {
+    async url(isrefreash) {
+      this.isrefresh = true // 加载数据的时候，让刷新按钮旋转
+      let self = this
       let res = await wepy.request({
         url: 'https://www.apiopen.top/satinApi',
         data: {
           type: 1,
-          page: 1
+          page: self.page
         },
         header: {
           'content-type': 'application/json' // 默认值
@@ -133,8 +208,13 @@
         item.videotime = `${minVal}:${secondVal}`
         return item
       })
-      this.list = res.data.data
-      console.log(this.list)
+      if (isrefreash) { // 如果是刷新
+        this.list = res.data.data
+      } else {
+        this.list = this.list.concat(res.data.data)
+      }
+      this.ismore = true
+      this.isrefresh = false
       this.$apply()
     }
     onLoad() {
