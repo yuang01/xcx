@@ -137,8 +137,8 @@ page {
         obj.type = 'me'
         obj.text = this.inputVal
         this.list.push(obj)
-        this.inputVal = ''
         await this.url().then(() => {
+          this.inputVal = ''
           this.$apply()
           wepy.createSelectorQuery().select('#page').boundingClientRect((rect) => {
             // 使页面滚动到底部
