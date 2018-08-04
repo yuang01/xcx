@@ -28,12 +28,18 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 1,
 			"list": [
 				{
 					"id": -1,
 					"name": "段子页面",
-					"pathName": "pages/paragraph"
+					"pathName": "pages/paragraph",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "小艾",
+					"pathName": "pages/robot"
 				}
 			]
 		}

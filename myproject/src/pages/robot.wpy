@@ -1,0 +1,162 @@
+<style>
+page {
+  display: block;
+  min-height: 100%;
+  background-color: rgba(204, 204, 204, .3);
+}
+</style>
+<style lang="scss" scoped>
+.page {
+  display: flex;
+  flex-direction: column;
+  .chatting {
+    line-height: 60rpx;
+    text-align: center;
+    background-color: #ed4040;
+    color: #fff;
+    font-size: 35rpx;
+    margin-bottom: 30rpx;
+  }
+  // 对话列表
+  .dialog-box {
+    margin-bottom: 80rpx;
+    .list {
+      display: flex;
+      padding: 0 20rpx;
+      @mixin img() {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+      }
+      // 头像
+      .avatar {
+        @include img;
+        image {
+          @include img;
+        }
+      }
+      // 文字
+      .text {
+        max-width: 70%;
+        border-radius: 20rpx;
+        padding: 30rpx;
+        margin: 15rpx;
+      }
+    }
+  }
+  .send-info {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    input {
+      width: 80%;
+      height: 80rpx;
+      background: #fff;
+      padding-left: 10rpx;
+      padding-right: 10rpx;
+      box-sizing: border-box;
+    }
+    button {
+      width: 20%;
+      line-height: 80rpx;
+      background: #ed4040;
+      color: #fff;
+    }
+  }
+}
+</style>
+
+<template>
+<view class="page" id="page">
+  <view class="chatting">{{chatting}}</view>
+  <view class="dialog-box">
+    <repeat for="{{list}}" key="index" index="index" item="item">
+      <view class="list" style="flex-direction:{{item.type === 'me' ? 'row-reverse' : 'row'}}">
+        <view class="avatar">
+          <image wx:if="{{item.type === 'me'}}" src="../images/me.jpg" mode="aspectFit"></image>
+          <image wx:if="{{item.type === 'xiaoai'}}" src="../images/xiaoai.png" mode="aspectFit"></image>
+        </view>
+        <view class="text" style="background: {{item.type === 'me' ? '#7fd53d' : '#fff'}};">{{item.text}}</view>
+      </view>
+    </repeat>
+  </view>
+  
+  <view class="send-info">
+    <input placeholder="" type="text" @focus="inputFocus" @blur="inputBlur" value="{{inputVal}}" @input="inputInfo"/>
+    <button @tap="send">发送</button>
+  </view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '小艾'
+    }
+    components = {}
+    data = {
+      inputVal: '',
+      chatting: '',
+      list: []
+    }
+    // 请求api
+    async url() {
+      this.chatting = '小艾正在输入...'
+      let self = this
+      let res = await wepy.request({
+        url: 'http://openapi.tuling123.com/openapi/api/v2',
+        method: 'POST',
+        data: {
+          'reqType': 0,
+          'perception': {
+            'inputText': {
+              'text': self.inputVal
+            }
+          },
+          'userInfo': {
+            'apiKey': 'c2008d2da51b4a12b30ded5dd1bc397e',
+            'userId': '295726'
+          }
+        }
+      })
+      this.chatting = ''
+      let obj = {}
+      obj.type = 'xiaoai'
+      obj.text = res.data.results[0].values.text
+      this.list.push(obj)
+      this.$apply()
+    }
+    methods = {
+      inputInfo(e) {
+        this.inputVal = e.detail.value
+      },
+      async send() {
+        let self = this
+        let obj = {}
+        obj.type = 'me'
+        obj.text = this.inputVal
+        this.list.push(obj)
+        await this.url().then(() => {
+          this.inputVal = ''
+          this.$apply()
+          wepy.createSelectorQuery().select('#page').boundingClientRect((rect) => {
+            // 使页面滚动到底部
+            wepy.pageScrollTo({
+              scrollTop: rect.bottom + 80
+            })
+          }).exec()
+        })
+      },
+      inputFocus() {
+        this.chatting = '正在输入...'
+        this.$apply()
+      },
+      inputBlur() {
+        this.chatting = ''
+        this.$apply()
+      }
+    }
+  }
+</script>
