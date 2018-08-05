@@ -158,7 +158,7 @@
                   <view class="news-src">{{chditem.src}}</view>
                 </view>
               </view>
-              <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" src="{{chditem.pic}}"></image></view>
+              <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" lazy-load="true" src="{{chditem.pic}}"></image></view>
             </view>
           </repeat>
           <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>

@@ -96,7 +96,7 @@
     <view class="list">
       <text>{{item.text}}</text>
       <!-- 当类型是图片的时候 -->
-      <image wx:if="{{item.type === '10'}}" src="{{item.cdn_img}}"  mode="aspectFit" @error="err({{index}})"></image>
+      <image wx:if="{{item.type === '10'}}" src="{{item.cdn_img}}" @tap="previewImage" data-list="{{item.cdn_img}}"  mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
       <!-- 当类型是视频的时候，一开始显示视频的图片，当点击播放按钮的时候才显示video -->
       <view class="video">
         <view class="mask" wx:if="{{item.type === '41' && index !== videoIndex}}"></view>
@@ -104,7 +104,7 @@
           <view class="play-button" @tap="playVideo({{index}})"></view>
           <view class="videotime">{{item.videotime}}</view>
         </view>
-        <image wx:if="{{item.type === '41' && index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" @error="err({{index}})"></image>
+        <image wx:if="{{item.type === '41' && index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
         <video wx:if="{{index === videoIndex}}" src="{{item.videouri}}" id="video-{{index}}" autoplay="true" show-center-play-btn="false" @error="err({{index}})"></video>
       </view>
       <!-- 底部评论数和发布时间 -->
@@ -185,6 +185,15 @@
           // let videoContext = wepy.createVideoContext(`video-${index}`)
           // videoContext.play()
         }
+      },
+      // 预览图片
+      previewImage(e) {
+        let list = e.currentTarget.dataset.list
+        let urls = []
+        urls.push(list)
+        wepy.previewImage({
+          urls
+        })
       }
     }
     // 请求api
