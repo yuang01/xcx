@@ -42,18 +42,18 @@ export default class extends wepy.app {
       borderStyle: 'black',
       list: [{
         pagePath: 'pages/news',
-        // selectedIconPath: './images/tabbars/icon-map-active.png',
-        // iconPath: './images/tabbars/icon-map.png',
+        selectedIconPath: './images/新闻02.png',
+        iconPath: './images/新闻01.png',
         text: '新闻'
       }, {
         pagePath: 'pages/paragraph',
-        // selectedIconPath: './images/tabbars/icon-book-active.png',
-        // iconPath: './images/tabbars/icon-book.png',
+        selectedIconPath: './images/笑02.png',
+        iconPath: './images/笑01.png',
         text: '笑一笑'
       }, {
         pagePath: 'pages/robot',
-        // selectedIconPath: './images/tabbars/icon-book-active.png',
-        // iconPath: './images/tabbars/icon-book.png',
+        selectedIconPath: './images/机器人02.png',
+        iconPath: './images/机器人01.png',
         text: '小艾'
       }]
     }

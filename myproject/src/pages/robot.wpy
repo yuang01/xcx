@@ -9,6 +9,7 @@ page {
 .page {
   display: flex;
   flex-direction: column;
+  // 显示正在输入
   .chatting {
     position: fixed;
     width: 100%;
@@ -19,9 +20,15 @@ page {
     font-size: 35rpx;
     margin-bottom: 30rpx;
   }
+  // 显示时间
+  .time {
+    line-height: 40rpx;
+    text-align: center;
+    font-size: 30rpx;
+  }
   // 对话列表
   .dialog-box {
-    margin-top: 60rpx;
+    margin-top: 20rpx;
     margin-bottom: 80rpx;
     .list {
       display: flex;
@@ -73,6 +80,7 @@ page {
 <template>
 <view class="page" id="page">
   <view class="chatting">{{chatting}}</view>
+  <view class="time">{{time}}</view>
   <view class="dialog-box">
     <repeat for="{{list}}" key="index" index="index" item="item">
       <view class="list" style="flex-direction:{{item.type === 'me' ? 'row-reverse' : 'row'}}">
@@ -100,6 +108,7 @@ page {
     }
     components = {}
     data = {
+      time: '',
       inputVal: '',
       chatting: '',
       list: []
@@ -160,6 +169,14 @@ page {
         this.chatting = ''
         this.$apply()
       }
+    }
+    onLoad() {
+      let date = new Date()
+      // 小时
+      let hours = date.getHours() >= 10 ? date.getHours() : `0${date.getHours()}`
+      // 分钟
+      let min = date.getMinutes() >= 10 ? date.getMinutes() : `0${date.getMinutes()}`
+      this.time = `${hours}:${min}`
     }
   }
 </script>
