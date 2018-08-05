@@ -10,6 +10,8 @@ page {
   display: flex;
   flex-direction: column;
   .chatting {
+    position: fixed;
+    width: 100%;
     line-height: 60rpx;
     text-align: center;
     background-color: #ed4040;
@@ -19,6 +21,7 @@ page {
   }
   // 对话列表
   .dialog-box {
+    margin-top: 60rpx;
     margin-bottom: 80rpx;
     .list {
       display: flex;
@@ -106,6 +109,7 @@ page {
       this.chatting = '小艾正在输入...'
       let self = this
       let res = await wepy.request({
+        // 微信官方api只支持https
         url: 'http://openapi.tuling123.com/openapi/api/v2',
         method: 'POST',
         data: {

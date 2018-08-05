@@ -44,7 +44,7 @@ export default class extends wepy.app {
         pagePath: 'pages/news',
         // selectedIconPath: './images/tabbars/icon-map-active.png',
         // iconPath: './images/tabbars/icon-map.png',
-        text: '首页'
+        text: '新闻'
       }, {
         pagePath: 'pages/paragraph',
         // selectedIconPath: './images/tabbars/icon-book-active.png',

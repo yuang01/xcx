@@ -114,7 +114,7 @@
   <view class="more" wx:if="{{ismore}}">加载中...</view>
   <!-- 刷新按钮 -->
   <view @tap="refresh" class="{{isrefresh === true ? 'rotate': ''}} refresh">
-    <image src="..//images/refresh.png" mode="aspectFit"></image>
+    <image src="../images/refresh.png" mode="aspectFit"></image>
   </view>
 </view>
 </template>
@@ -154,7 +154,7 @@
         wepy.showLoading({
           title: '加载中'
         })
-        this.videoIndex = -1 
+        this.videoIndex = -1
         this.page = 0
         await this.url(true).then(res => {
           wepy.hideLoading()

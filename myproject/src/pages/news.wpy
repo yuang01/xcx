@@ -170,7 +170,7 @@
   <!-- 背景文字，加载的时候出现的文字 -->
   <view class="bg-text" wx:if="{{!isswiper}}"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
   <view @tap="refresh" class="{{isrefresh === true ? 'rotate': ''}} refresh">
-    <image src="..//images/refresh.png" mode="aspectFit"></image>
+    <image src="../images/refresh.png" mode="aspectFit"></image>
   </view>
 </view>
 </template>
@@ -179,7 +179,7 @@
   import wepy from 'wepy'
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '首页'
+      navigationBarTitleText: '新闻'
     }
     components = {}
     data = {
@@ -263,7 +263,7 @@
       let self = this
       let start = this.page[this.showtab]
       let res = await wepy.request({
-        url: 'http://api.jisuapi.com/news/get?appkey=97402b05fa4ab929',
+        url: 'https://api.jisuapi.com/news/get?appkey=97402b05fa4ab929',
         data: {
           channel: self.channel,
           num: 10,
