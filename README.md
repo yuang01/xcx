@@ -42,6 +42,7 @@
 * <a href="https://developers.weixin.qq.com/miniprogram/dev/" target="_blank">小程序原生开发文档</a>
 * <a href="https://tencent.github.io/wepy/index.html" target="_blank">wepy开发文档</a>
 * <a href="http://mpvue.com/" target="_blank">mpvue开发文档</a>
+
 简单说一下mpvue框架的语法和vue的语法是一样的，只是少了vue的一些东西，比如vue-router等等，还有一点比较烦就是每新增一个页面都要手动重启编译一下，但是好处也是有很多的，像vuex什么的都有。
 这个项目我选择的时wepy，这是一个类vue的框架，支持redux等等
 新建一个wepy项目也是特别的简单，使用如下代码即可。
