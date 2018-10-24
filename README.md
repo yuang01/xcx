@@ -6,7 +6,8 @@
 
 <!-- more -->
 # 项目总览
-![项目总览]( http://yuang.site/images/xcx03.gif)
+<img src="http://yuang.site/images/xcx03.gif"/>
+<!-- ![项目总览]( http://yuang.site/images/xcx03.gif) -->
 > 项目模块分为三大类
 * 新闻模块
 * 笑一笑模块
