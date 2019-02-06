@@ -288,7 +288,7 @@
       let clientHeight = res.windowHeight
       let clientWidth = res.windowWidth
       let rpxR = 750 / clientWidth
-      let calc = clientHeight * rpxR - 180
+      let calc = clientHeight * rpxR - 80
       this.winHeight = calc
       this.tabWidth = clientWidth / 5
       this.$apply()
