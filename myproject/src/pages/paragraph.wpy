@@ -94,7 +94,7 @@
 <template>
 <view class="page">
   <repeat for="{{list}}" key="index" index="index" item="item">
-    <view class="list">
+    <view class="list" wx:if="{{item.height < 1000}}">
       <text>{{item.text}}</text>
       <!-- 当类型是图片的时候 -->
       <image wx:if="{{item.type === '10'}}" src="{{item.cdn_img}}" @tap="previewImage" data-list="{{item.cdn_img}}"  mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
