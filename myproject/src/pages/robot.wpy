@@ -119,7 +119,7 @@ page {
       let self = this
       let res = await wepy.request({
         // 微信官方api只支持https
-        url: 'http://openapi.tuling123.com/openapi/api/v2',
+        url: 'https://openapi.tuling123.com/openapi/api/v2',
         method: 'POST',
         data: {
           'reqType': 0,

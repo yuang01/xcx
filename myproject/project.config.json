@@ -5,12 +5,13 @@
 		"es6": false,
 		"postcss": false,
 		"minified": false,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"compileType": "miniprogram",
 	"appid": "wx92c2f1a0458e427e",
 	"projectname": "myproject",
-	"miniprogramRoot": "./dist",
+	"miniprogramRoot": "dist/",
 	"condition": {
 		"search": {
 			"current": -1,

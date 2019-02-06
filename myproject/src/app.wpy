@@ -32,7 +32,7 @@ export default class extends wepy.app {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#ed4040',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'light',
+      navigationBarTextStyle: 'white',
       backgroundColor: '#ed4040'
     },
     tabBar: {
