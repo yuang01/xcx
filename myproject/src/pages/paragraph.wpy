@@ -170,21 +170,23 @@
         this.list.splice(index, 1)
       },
       // 当点击播放按钮，将图片变成视频,将其他视频隐藏（这样做的目的是让本页面始终只有一个视频处于播放状态）
-      playVideo(index) {
-        // 当第一次点击视频的时候，将index绑定到videoIndex上面
-        // 然后通过wepy.createVideoContext(`video-${index}`)获取当前点击的视频，然后进行播放
-        if (this.videoIndex === -1) {
-          this.videoIndex = index
-          // 如果视频未设置自动播放，就执行以下注释代码
-          // let videoContext = wepy.createVideoContext(`video-${index}`)
-          // videoContext.play()
-        } else { // 否则，则表示不是第一次点击，则关闭上一次点击的视频，并将当前点击的视频打开
-          let self = this
-          let videoContextPrev = wepy.createVideoContext(`video-${self.videoIndex}`)
-          videoContextPrev.pause()
-          this.videoIndex = index
-          // let videoContext = wepy.createVideoContext(`video-${index}`)
-          // videoContext.play()
+      async playVideo(index) {
+        // 如果当前是wifi环境则允许直接播放视频
+        if (wepy.$instance.globalData.networkType === 1) {
+          this.playVideoFun(index)
+        } else {
+          const res = await wepy.showModal({
+            title: '提示',
+            content: '非wifi环境，是否继续播放视频',
+            confirmColor: '#ed4040'
+          })
+          // 用户点击确定或者取消
+          if (res.confirm) {
+            wepy.$instance.globalData.networkType = 1
+            this.playVideoFun(index)
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
         }
       },
       // 预览图片
@@ -229,8 +231,32 @@
       this.isrefresh = false
       this.$apply()
     }
+    // 播放视频函数
+    playVideoFun(index) {
+      // 当第一次点击视频的时候，将index绑定到videoIndex上面
+      // 然后通过wepy.createVideoContext(`video-${index}`)获取当前点击的视频，然后进行播放
+      if (this.videoIndex === -1) {
+        this.videoIndex = index
+        // 如果视频未设置自动播放，就执行以下注释代码
+        // let videoContext = wepy.createVideoContext(`video-${index}`)
+        // videoContext.play()
+      } else { // 否则，则表示不是第一次点击，则关闭上一次点击的视频，并将当前点击的视频打开
+        let self = this
+        let videoContextPrev = wepy.createVideoContext(`video-${self.videoIndex}`)
+        videoContextPrev.pause()
+        this.videoIndex = index
+        // let videoContext = wepy.createVideoContext(`video-${index}`)
+        // videoContext.play()
+      }
+      this.$apply()
+    }
     onLoad() {
       this.url()
+    }
+    onHide() {
+      let self = this
+      let videoContextPrev = wepy.createVideoContext(`video-${self.videoIndex}`)
+      videoContextPrev.stop()
     }
   }
 </script>

@@ -60,7 +60,8 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    networkType: 1
   }
 
   constructor () {
@@ -69,8 +70,29 @@ export default class extends wepy.app {
     this.use('promisify')
   }
 
-  onLaunch() {
+  async onLaunch() {
     this.testAsync()
+    // 检查是否为wifi环境
+    let res = await wepy.getNetworkType()
+    this.checkNetwork(res)
+    // 当网络环境发生改变的时候
+    wepy.onNetworkStatusChange((res2) => {
+      if (res2.isConnected) {
+        this.checkNetwork(res2)
+      } else {
+        wepy.showToast({
+          title: '当前网络不可用，请检查网络连接是否正确',
+          icon: 'loading',
+          duration: 2000
+        })
+      }
+    })
+  }
+
+  checkNetwork(res) {
+    if (res.networkType !== 'wifi') {
+      this.globalData.networkType = 0
+    }
   }
 
   sleep (s) {

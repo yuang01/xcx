@@ -263,7 +263,7 @@
       let self = this
       let start = this.page[this.showtab]
       let res = await wepy.request({
-        url: 'https://api.jisuapi.com/news/get?appkey=97402b05fa4ab929',
+        url: 'http://api.jisuapi.com/news/get?appkey=97402b05fa4ab929',
         data: {
           channel: self.channel,
           num: 10,
