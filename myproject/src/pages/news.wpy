@@ -104,8 +104,8 @@
     position: fixed;
     right: 30rpx;
     bottom: 50rpx;
-    width: 100rpx;
-    height: 100rpx;
+    width: 80rpx;
+    height: 80rpx;
     border-radius: 50%;
     background: #fff;
     z-index: 3;
@@ -163,7 +163,7 @@
           </repeat>
           <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
         </scroll-view>
-        <view class="more">加载中...</view>
+        <view class="more">正在载入更多...</view>
       </swiper-item>
     </repeat>
   </swiper>

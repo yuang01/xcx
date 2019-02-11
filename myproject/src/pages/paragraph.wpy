@@ -1,21 +1,25 @@
 <style lang="scss" scoped>
 .page {
   padding: 0 20rpx;
+  position: relative;
   .list {
     padding: 20rpx 0;
     border-bottom: 1rpx solid #ccc;
-    font-size: 1rem;
+    font-size: 30rpx;
     text {
-      font-size: 35rpx;
+      font-size: 30rpx;
     }
     image,
     video {
       width: 100%;
       margin: 20rpx 0 0 0;
     }
+    image {
+      max-height: 400rpx;
+    }
     .info {
       display: flex;
-      font-size: .8rem;
+      font-size:30rpx;
       margin-top: 20rpx;
       .comment {
         margin-right: 10rpx;
@@ -25,6 +29,12 @@
       position: relative;
       overflow: hidden;
       margin: 20rpx 0;
+      min-height: 400rpx;
+      image, video {
+        position: absolute;
+        width: 100%;
+        height: 400rpx;
+      }
       .mask {
         position: absolute;
         z-index: 1;
@@ -56,9 +66,49 @@
     }
   }
   .more {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 12px;
-    padding: 10rpx 0 ;
+    padding: 10rpx 0;
+    image {
+      width: 50rpx;
+      height: 50rpx;
+    }
+  }
+  // 背景文字
+  .bg-text {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 300rpx;
+    font-size: 25px;
+    color: rgb(110, 106, 106);
+    font-weight: 900;
+    opacity: .3;
+    text-align: center;
+    transform: rotate(-10deg) translateY(-50%);
+    margin-top: 50%;
+    z-index: -1;
+    .light {
+      position: absolute;
+      width: 10px;
+      height: 100px;
+      background: #fff;
+      opacity: .5;
+      top: 0;
+      left: 0;
+      animation: move .5s infinite;
+    }
+    @keyframes move {
+      0% {
+        left: 0;
+      }
+      100% {
+        left: 100%;
+      }
+    }
   }
   // 刷新按钮样式
   .refresh {
@@ -78,7 +128,7 @@
     }
   }
   .rotate {
-    animation:  rotate 1s infinite; 
+    animation: rotate 1s infinite; 
   }
   @keyframes rotate {
     0% {
@@ -99,20 +149,22 @@
       <!-- 当类型是图片的时候 -->
       <image wx:if="{{item.type === '10'}}" src="{{item.cdn_img}}" @tap="previewImage" data-list="{{item.cdn_img}}"  mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
       <!-- 当类型是视频的时候，一开始显示视频的图片，当点击播放按钮的时候才显示video -->
-      <view class="video">
-        <view class="mask" wx:if="{{item.type === '41' && index !== videoIndex}}"></view>
-        <view class="play" wx:if="{{item.type === '41' && index !== videoIndex}}">
+      <view class="video" wx:if="{{item.type === '41'}}">
+        <view class="mask" wx:if="{{index !== videoIndex}}"></view>
+        <view class="play" wx:if="{{index !== videoIndex}}">
           <view class="play-button" @tap="playVideo({{index}})"></view>
           <view class="videotime">{{item.videotime}}</view>
         </view>
-        <image wx:if="{{item.type === '41' && index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
+        <image wx:if="{{index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
         <video wx:if="{{index === videoIndex}}" src="{{item.videouri}}" id="video-{{index}}" autoplay="true" show-center-play-btn="false" @error="err({{index}})"></video>
       </view>
       <!-- 底部评论数和发布时间 -->
       <view class="info"><view class="comment">{{item.comment}}评论</view><view class="passtime">{{item.passtime}}</view></view>
     </view>
   </repeat>
-  <view class="more" wx:if="{{ismore}}">加载中...</view>
+  <view class="more" wx:if="{{ismore}}"><image src="../images/loader.gif"></image>加载中...</view>
+  <!-- 背景文字 -->
+  <view class="bg-text" wx:if="{{isloading}}"><view>笑一笑</view><view>生活更精彩</view><view class="light"></view></view>
   <!-- 刷新按钮 -->
   <view @tap="refresh" class="{{isrefresh === true ? 'rotate': ''}} refresh">
     <image src="../images/refresh.png" mode="aspectFit"></image>
@@ -132,7 +184,8 @@
       list: [],
       page: 1,
       videoIndex: -1,
-      ismore: false
+      ismore: false,
+      isloading: true
     }
     // 上拉加载更多
     onReachBottom() {
@@ -229,6 +282,7 @@
       }
       this.ismore = true
       this.isrefresh = false
+      this.isloading = false
       this.$apply()
     }
     // 播放视频函数
