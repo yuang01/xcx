@@ -68,8 +68,15 @@
     }
   }
   .more {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 12px;
+    padding: 10rpx 0;
+    image {
+      width: 50rpx;
+      height: 50rpx;
+    }
   }
   .bg-text {
     position: relative;
@@ -163,7 +170,7 @@
           </repeat>
           <view wx:if="{{item.length === 0}}" class="bg-text"><view>看头条</view><view>来这里就够了</view><view class="light"></view></view>
         </scroll-view>
-        <view class="more">正在载入更多...</view>
+        <view class="more"><image src="../images/loader.gif"></image>正在载入更多...</view>
       </swiper-item>
     </repeat>
   </swiper>

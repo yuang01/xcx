@@ -162,7 +162,7 @@
       <view class="info"><view class="comment">{{item.comment}}评论</view><view class="passtime">{{item.passtime}}</view></view>
     </view>
   </repeat>
-  <view class="more" wx:if="{{ismore}}"><image src="../images/loader.gif"></image>加载中...</view>
+  <view class="more" wx:if="{{ismore}}"><image src="../images/loader.gif"></image>正在加载更多...</view>
   <!-- 背景文字 -->
   <view class="bg-text" wx:if="{{isloading}}"><view>笑一笑</view><view>生活更精彩</view><view class="light"></view></view>
   <!-- 刷新按钮 -->
