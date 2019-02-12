@@ -12,6 +12,9 @@ npm install
 ```
 wepy build --watch
 ```
+注意：如遇到未能找到less编译器的问题，使用如下代码下载less
+```
+npm install less -d
 <!-- more -->
 # 项目总览
 ![项目总览](https://github.com/yuang01/mybolg/blob/yuangboy/source/images/xcx03.gif)
