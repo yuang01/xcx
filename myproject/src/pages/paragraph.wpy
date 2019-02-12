@@ -44,21 +44,31 @@
         position: absolute;
         left: 50%;
         top: 50%;
+        width: 130rpx;
+        height: 130rpx;
         display: block;
-        transform: translate(-30%, -50%);
-        opacity: .8;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, .6);
+        border-radius: 50%;
         z-index: 2;
         .play-button {
+          position: absolute;
+          left: 55%;
+          top: 50%;
+          transform: translate(-50%, -50%);
           width: 0;
           height: 0;
-          border-top: 50rpx solid transparent;
-          border-left: 70rpx solid #fff;
-          border-bottom: 50rpx solid transparent;
+          border-top: 30rpx solid transparent;
+          border-left: 50rpx solid #fff;
+          border-bottom: 30rpx solid transparent;
         }
-        .videotime {
-          color: #fff;
-          transform: translateX(-20%); 
-        }
+      }
+      .videotime {
+        position: absolute;
+        right: 20rpx;
+        bottom: 20rpx;
+        color: #fff;
+        z-index: 1;
       }
     }
   }
@@ -148,10 +158,11 @@
       <!-- 当类型是视频的时候，一开始显示视频的图片，当点击播放按钮的时候才显示video -->
       <view class="video" wx:if="{{item.type === '41'}}">
         <view class="mask" wx:if="{{index !== videoIndex}}"></view>
-        <view class="play" wx:if="{{index !== videoIndex}}">
-          <view class="play-button" @tap="playVideo({{index}})"></view>
-          <view class="videotime">{{item.videotime}}</view>
+        <view class="play" wx:if="{{index !== videoIndex}}" @tap="playVideo({{index}})">
+          <view class="play-button"></view>
+          <!-- <view class="videotime">{{item.videotime}}</view> -->
         </view>
+        <view class="videotime">{{item.videotime}}</view>
         <image wx:if="{{index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
         <video wx:if="{{index === videoIndex}}" src="{{item.videouri}}" id="video-{{index}}" autoplay="true" show-center-play-btn="false" @error="err({{index}})"></video>
       </view>
