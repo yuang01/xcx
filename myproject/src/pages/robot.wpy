@@ -144,9 +144,8 @@ page {
       list: []
     }
     // 请求api
-    async url() {
+    async url(val) {
       this.chatting = '小艾正在输入...'
-      let self = this
       let res = await wepy.request({
         // 微信官方api只支持https
         url: 'https://openapi.tuling123.com/openapi/api/v2',
@@ -155,7 +154,7 @@ page {
           'reqType': 0,
           'perception': {
             'inputText': {
-              'text': self.inputVal
+              'text': val
             }
           },
           'userInfo': {
@@ -180,16 +179,11 @@ page {
         obj.type = 'me'
         obj.text = this.inputVal
         this.list.push(obj)
-        await this.url().then(() => {
-          this.inputVal = ''
-          this.$apply()
-          wepy.createSelectorQuery().select('#page').boundingClientRect((rect) => {
-            // 使页面滚动到底部
-            wepy.pageScrollTo({
-              scrollTop: rect.bottom + 80
-            })
-          }).exec()
-        })
+        const inputVal = this.inputVal
+        this.inputVal = ''
+        this.$apply()
+        await this.url(inputVal)
+        this.scrollBottom()
       },
       inputFocus() {
         this.chatting = '正在输入...'
@@ -199,6 +193,15 @@ page {
         this.chatting = ''
         this.$apply()
       }
+    }
+    // 滚动到底部
+    scrollBottom() {
+      wepy.createSelectorQuery().select('#page').boundingClientRect((rect) => {
+        // 使页面滚动到底部
+        wepy.pageScrollTo({
+          scrollTop: rect.bottom + 80
+        })
+      }).exec()
     }
     onLoad() {
       let date = new Date()
