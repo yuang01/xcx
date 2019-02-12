@@ -40,15 +40,18 @@
         }
         .news-source {
           display: flex;
+          align-items: center;
           font-size: 32rpx;
           color: rgb(75, 67, 67);
           margin-top: 20rpx;
-          .news-category,
-          .news-time,
-          .news-src {
+          .news-src,
+          .news-time {
             margin-right: 10rpx;
           }
-          .news-category {
+          .news-time {
+            font-size: 28rpx;
+          }
+          .news-src {
             border: 1px solid $color;
             color: $color;
             padding: 5rpx;
@@ -161,8 +164,8 @@
               <view class="news-introduce" style="width:{{chditem.pic === '' ? '100%' : '66%'}};">
                 <view class="news-title">{{chditem.title}}</view>
                 <view class="news-source">
-                  <view class="news-category">{{chditem.category}}</view>
                   <view class="news-src">{{chditem.src}}</view>
+                  <view class="news-time">{{chditem.time}}</view>
                 </view>
               </view>
               <view class="news-img" wx:if="{{chditem.pic}}"><image class="image" mode="aspectFit" lazy-load="true" src="{{chditem.pic}}"></image></view>
@@ -279,6 +282,9 @@
         header: {
           'content-type': 'application/json' // 默认值
         }
+      })
+      res.data.result.list.forEach(element => {
+        element.time = element.time.split(' ')[0]
       })
       if (refresh) {
         this.list[this.showtab] = res.data.result.list
