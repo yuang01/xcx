@@ -160,7 +160,6 @@
         <view class="mask" wx:if="{{index !== videoIndex}}"></view>
         <view class="play" wx:if="{{index !== videoIndex}}" @tap="playVideo({{index}})">
           <view class="play-button"></view>
-          <!-- <view class="videotime">{{item.videotime}}</view> -->
         </view>
         <view class="videotime">{{item.videotime}}</view>
         <image wx:if="{{index !== videoIndex}}" src="{{item.cdn_img}}" mode="aspectFit" lazy-load="true" @error="err({{index}})"></image>
