@@ -29,10 +29,11 @@ page {
   // 对话列表
   .dialog-box {
     margin-top: 20rpx;
-    margin-bottom: 80rpx;
+    margin-bottom: 90rpx;
     .list {
       display: flex;
       padding: 0 20rpx;
+      margin-bottom: 15rpx;
       @mixin img() {
         width: 80rpx;
         height: 80rpx;
@@ -41,16 +42,35 @@ page {
       // 头像
       .avatar {
         @include img;
-        image {
+        .meAvatar {
+          overflow: hidden;
+        }
+        .meAvatar, image {
           @include img;
         }
       }
-      // 文字
-      .text {
+      // 名称和对话文本
+      .nameAndText {
         max-width: 70%;
-        border-radius: 20rpx;
-        padding: 30rpx;
-        margin: 15rpx;
+        // 名称
+        .meName, .xiaoaiName {
+          font-size: 25rpx;
+        }
+        .meName {
+          text-align: right;
+          margin: 0 15rpx 10rpx 0;
+        }
+        .xiaoaiName {
+          text-align: left;
+          margin: 0 0 10rpx 15rpx;
+        }
+        // 文字
+        .text {
+          border-radius: 20rpx;
+          padding: 20rpx;
+          margin: 0 15rpx;
+          font-size: 35rpx;
+        }
       }
     }
   }
@@ -85,10 +105,20 @@ page {
     <repeat for="{{list}}" key="index" index="index" item="item">
       <view class="list" style="flex-direction:{{item.type === 'me' ? 'row-reverse' : 'row'}}">
         <view class="avatar">
-          <image wx:if="{{item.type === 'me'}}" src="../images/me.jpg" mode="aspectFit"></image>
+          <view class="meAvatar" wx:if="{{item.type === 'me'}}">
+            <open-data type="userAvatarUrl"></open-data>
+          </view>
           <image wx:if="{{item.type === 'xiaoai'}}" src="../images/xiaoai.png" mode="aspectFit"></image>
         </view>
-        <view class="text" style="background: {{item.type === 'me' ? '#7fd53d' : '#fff'}};">{{item.text}}</view>
+        <view class="nameAndText">
+          <view class="meName" wx:if="{{item.type === 'me'}}">
+            <open-data type="userNickName"></open-data>
+          </view>
+          <view class="xiaoaiName" wx:if="{{item.type === 'xiaoai'}}">
+            小艾同学
+          </view>
+          <view class="text" style="background: {{item.type === 'me' ? '#7fd53d' : '#fff'}};">{{item.text}}</view>
+        </view>
       </view>
     </repeat>
   </view>
