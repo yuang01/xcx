@@ -1,13 +1,4 @@
----
-title:  wepy+async+sass微信小程序
-date: 2019-02-17 19:47
-categories: "wepy"
-tags: '小程序'
----
-# 前言
-业余时间写了一个小程序，但是不能上线，所以就当写着玩，想要学习的朋友可以`clone`我的<a href="https://github.com/yuang01/xcx" target="_blank">项目地址</a>。欢迎star
 
-<!-- more -->
 # 项目总览
 ![项目总览](https://github.com/yuang01/mybolg/blob/yuangboy/source/images/xcx.png)
 
